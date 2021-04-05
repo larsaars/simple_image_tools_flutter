@@ -78,16 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     file,
                     fit: BoxFit.cover,
                   ),*/
-                      Image.asset('assets/test_image.jpg'),
-                  foreground: IgnorePointer(
-                    child: Container(
-                      alignment: Alignment.bottomRight,
-                      child: Text(
-                        'Foreground Object',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
-                  ),
+                      Image.asset('assets/imgs/test_image.jpg'),
                   helper: shape == BoxShape.rectangle
                       ? Container(
                           decoration: BoxDecoration(
@@ -102,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
                 IconButton(
                   icon: Icon(Icons.undo),
-                  tooltip: 'Undo',
+                  tooltip: s.undo,
                   onPressed: () {
                     controller.rotation = 0;
                     controller.scale = 1;
@@ -136,15 +127,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   icon: Icon(Icons.crop_free),
                   itemBuilder: (context) => [
                     PopupMenuItem(
-                      child: Text("Box"),
+                      child: Text(s.box),
                       value: BoxShape.rectangle,
                     ),
                     PopupMenuItem(
-                      child: Text("Oval"),
+                      child: Text(s.oval),
                       value: BoxShape.circle,
                     ),
                   ],
-                  tooltip: 'Crop Shape',
+                  tooltip: s.cropShape,
                   onSelected: (x) {
                     setState(() {
                       shape = x;
@@ -155,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   icon: Icon(Icons.aspect_ratio),
                   itemBuilder: (context) => [
                     PopupMenuItem(
-                      child: Text("Original"),
+                      child: Text(s.original),
                       value: 1000 / 667.0,
                     ),
                     PopupMenuDivider(),
@@ -180,7 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       value: 9.0 / 16.0,
                     ),
                   ],
-                  tooltip: 'Aspect Ratio',
+                  tooltip: s.aspectRatio,
                   onSelected: (x) {
                     controller.aspectRatio = x;
                     setState(() {});
