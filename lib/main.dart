@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:simple_image_tools/strings.dart';
@@ -36,7 +37,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final controller = CropController();
-  double _rotation = 0;
+  double _rotation = 0, _scale = 1;
   BoxShape shape = BoxShape.rectangle;
 
   @override
@@ -61,6 +62,28 @@ class _MyHomePageState extends State<MyHomePage> {
         // in the middle of the parent.
         child: Column(
           children: <Widget>[
+            Row(
+              children: [
+                Expanded(
+                  child: SliderTheme(
+                    data: Theme.of(context).sliderTheme,
+                    child: Slider(
+                      divisions: 100,
+                      value: min(_scale, 11),
+                      min: 1,
+                      max: 11,
+                      label: '$_scale',
+                      onChanged: (n) {
+                        setState(() {
+                          _scale = n.toDouble();
+                          controller.scale = _rotation;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
             Expanded(
               child: Container(
                 color: Colors.black,
@@ -99,6 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     controller.scale = 1;
                     controller.offset = Offset.zero;
                     setState(() {
+                      _scale = 1;
                       _rotation = 0;
                     });
                   },
