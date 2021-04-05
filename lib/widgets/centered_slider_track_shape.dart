@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 class CenteredRectangularSliderTrackShape extends RectangularSliderTrackShape {
   @override
   void paint(PaintingContext context, ui.Offset offset,
-      {RenderBox? parentBox,
-      SliderThemeData? sliderTheme,
-      Animation<double>? enableAnimation,
-      ui.Offset? thumbCenter,
-      bool isEnabled: false,
-      bool isDiscrete: false,
-      ui.TextDirection? textDirection}) {
+      {required RenderBox parentBox,
+      required SliderThemeData sliderTheme,
+      required Animation<double> enableAnimation,
+      required ui.TextDirection textDirection,
+      required ui.Offset thumbCenter,
+      bool isDiscrete = false,
+      bool isEnabled = false}) {
     // If the slider track height is less than or equal to 0, then it makes no
     // difference whether the track is painted or not, therefore the painting
     // can be a no-op.
-    if (sliderTheme.trackHeight <= 0) {
+    if (sliderTheme.trackHeight! <= 0) {
       return;
     }
 
@@ -29,9 +29,9 @@ class CenteredRectangularSliderTrackShape extends RectangularSliderTrackShape {
         begin: sliderTheme.disabledInactiveTrackColor,
         end: sliderTheme.inactiveTrackColor);
     final Paint activePaint = Paint()
-      ..color = activeTrackColorTween.evaluate(enableAnimation);
+      ..color = activeTrackColorTween.evaluate(enableAnimation)!;
     final Paint inactivePaint = Paint()
-      ..color = inactiveTrackColorTween.evaluate(enableAnimation);
+      ..color = inactiveTrackColorTween.evaluate(enableAnimation)!;
 
     final Rect trackRect = getPreferredRect(
       parentBox: parentBox,
@@ -42,7 +42,7 @@ class CenteredRectangularSliderTrackShape extends RectangularSliderTrackShape {
     );
     final trackCenter = trackRect.center;
     final Size thumbSize =
-        sliderTheme.thumbShape.getPreferredSize(isEnabled, isDiscrete);
+        sliderTheme.thumbShape!.getPreferredSize(isEnabled, isDiscrete);
     // final Rect leftTrackSegment = Rect.fromLTRB(
     //     trackRect.left + trackRect.height / 2,
     //     trackRect.top,

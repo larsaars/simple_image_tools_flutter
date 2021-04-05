@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:crop/crop.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_image_tools/strings.dart';
 
-import 'centered_slider_track_shape.dart';
+import 'crop/crop.dart';
+import 'widgets/centered_slider_track_shape.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+  MyHomePage({Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -73,10 +73,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   controller: controller,
                   shape: shape,
-                  child: Image.file(
+                  child:
+                      /*Image.file(
                     file,
                     fit: BoxFit.cover,
-                  ),
+                  ),*/
+                      Image.asset('assets/test_image.jpg'),
                   foreground: IgnorePointer(
                     child: Container(
                       alignment: Alignment.bottomRight,
