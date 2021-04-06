@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:simple_image_tools/crop/src/crop.dart';
 
 // the set input file
-var inputFile = File('C:\\Users\\larsl\\Downloads\\20210327_004302.jpg');
+var inputFile = File('C:\\Users\\larsl\\Downloads\\20210323_211516.jpg');
 // from the input file read all files in same folder for switching (right left)
 List<File> files = [];
 int filesIdx = 0;

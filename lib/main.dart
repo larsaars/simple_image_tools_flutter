@@ -42,7 +42,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  double _rotation = 0, _scale = 1;
+  double _rotation = 0,
+      _scale = 1;
   BoxShape shape = BoxShape.rectangle;
 
   @override
@@ -71,35 +72,19 @@ class _MyHomePageState extends State<MyHomePage> {
               Icons.center_focus_strong,
             ),
             tooltip: s.recenter,
-            onPressed: () => setState(
-              () {
-                controller.recenter();
-              },
-            ),
+            onPressed: () =>
+                setState(
+                      () {
+                    controller.recenter();
+                  },
+                ),
           ),
           IconButton(
             icon: Icon(
               Icons.save,
             ),
             tooltip: s.cropReplace,
-            onPressed: () => controller.crop().then(
-              (image) async {
-                // delete old file
-                file.deleteSync();
-                // rename file to a png
-                final fileName =
-                    path.basenameWithoutExtension(file.path) + '.png';
-                File newFile =
-                    File(file.parent.path + Platform.pathSeparator + fileName);
-                // write new image
-                var pngBytes =
-                    await image.toByteData(format: ImageByteFormat.png);
-                newFile.writeAsBytes(pngBytes!.buffer.asInt8List()).then((value) => setState(() {
-                  inputFile = newFile;
-                  setFiles();
-                }));
-              },
-            ),
+            onPressed: () => cropAndSave(true),
           ),
           PopupMenuButton<String>(
             onSelected: handleMenuClick,
@@ -123,9 +108,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   Icons.chevron_left,
                 ),
                 tooltip: s.lastPicture,
-                onPressed: () => switchImage(-1).then((value) => setState(() {
-                      controller.recenter();
-                    }))),
+                onPressed: () =>
+                    switchImage(-1).then((value) =>
+                        setState(() {
+                          controller.recenter();
+                        }))),
           ),
           Expanded(
             child: Column(
@@ -133,27 +120,29 @@ class _MyHomePageState extends State<MyHomePage> {
                 // show only on desktop
                 platformIsDesktop
                     ? Row(
-                        children: [
-                          Expanded(
-                            child: SliderTheme(
-                              data: Theme.of(context).sliderTheme,
-                              child: Slider(
-                                divisions: 100,
-                                value: math.min(_scale, 11),
-                                min: 1,
-                                max: 11,
-                                label: _scale.toStringAsFixed(1),
-                                onChanged: (n) {
-                                  setState(() {
-                                    _scale = n.toDouble();
-                                    controller.scale = _scale;
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
+                  children: [
+                    Expanded(
+                      child: SliderTheme(
+                        data: Theme
+                            .of(context)
+                            .sliderTheme,
+                        child: Slider(
+                          divisions: 100,
+                          value: math.min(_scale, 11),
+                          min: 1,
+                          max: 11,
+                          label: _scale.toStringAsFixed(1),
+                          onChanged: (n) {
+                            setState(() {
+                              _scale = n.toDouble();
+                              controller.scale = _scale;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                )
                     : Container(),
                 Expanded(
                   child: Container(
@@ -166,17 +155,17 @@ class _MyHomePageState extends State<MyHomePage> {
                       shape: shape,
                       child: file.existsSync()
                           ? Image.file(
-                              file,
-                              fit: BoxFit.cover,
-                            )
+                        file,
+                        fit: BoxFit.cover,
+                      )
                           : Image.asset('assets/imgs/def.jpg'),
                       helper: shape == BoxShape.rectangle
                           ? Container(
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.white, width: 2),
-                              ),
-                            )
+                        decoration: BoxDecoration(
+                          border:
+                          Border.all(color: Colors.white, width: 2),
+                        ),
+                      )
                           : null,
                     ),
                   ),
@@ -199,9 +188,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     Expanded(
                       child: SliderTheme(
-                        data: Theme.of(context).sliderTheme.copyWith(
-                              trackShape: CenteredRectangularSliderTrackShape(),
-                            ),
+                        data: Theme
+                            .of(context)
+                            .sliderTheme
+                            .copyWith(
+                          trackShape: CenteredRectangularSliderTrackShape(),
+                        ),
                         child: Slider(
                           divisions: 360,
                           value: _rotation,
@@ -219,7 +211,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     PopupMenuButton<BoxShape>(
                       icon: Icon(Icons.crop_free),
-                      itemBuilder: (context) => [
+                      itemBuilder: (context) =>
+                      [
                         PopupMenuItem(
                           child: Text(s.box),
                           value: BoxShape.rectangle,
@@ -238,7 +231,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     PopupMenuButton<double>(
                       icon: Icon(Icons.aspect_ratio),
-                      itemBuilder: (context) => [
+                      itemBuilder: (context) =>
+                      [
                         PopupMenuItem(
                           child: Text(s.original),
                           value: ogAspectRatio,
@@ -282,9 +276,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   Icons.chevron_right,
                 ),
                 tooltip: s.nextPicture,
-                onPressed: () => switchImage(1).then((value) => setState(() {
-                      controller.recenter();
-                    }))),
+                onPressed: () =>
+                    switchImage(1).then((value) =>
+                        setState(() {
+                          controller.recenter();
+                        }))),
           ),
         ],
       ),
@@ -294,14 +290,40 @@ class _MyHomePageState extends State<MyHomePage> {
   void handleMenuClick(String value) {
     switch (value) {
       case s.about:
-        _onAbout();
+        onAbout();
         break;
       case s.cropCopy:
+        cropAndSave(false);
         break;
     }
   }
 
-  void _onAbout() async {
+  void cropAndSave(bool replacement) {
+    controller.crop(pixelRatio: 5).then((image) async {
+      // delete old file
+      file.deleteSync();
+      // rename file to a png
+      final fileName =
+          path.basenameWithoutExtension(file.path) +
+              (replacement ? '' : '_copy') + '.png';
+      File newFile =
+      File(file.parent.path + Platform.pathSeparator + fileName);
+      // write new image
+      var pngBytes =
+      await image.toByteData(format: ImageByteFormat.png);
+      newFile
+          .writeAsBytes(pngBytes!.buffer.asInt8List())
+          .then((value) =>
+          setState(() {
+            // and reload files
+            if(replacement)
+              inputFile = newFile;
+            setFiles();
+          }));
+    });
+  }
+
+  void onAbout() async {
     //show the about dialog
     showAboutDialog(
       context: context,
