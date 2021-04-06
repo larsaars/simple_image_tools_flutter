@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 
-import 'package:crop/crop.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_image_tools/utils/utils.dart';
 
+import 'crop/src/crop.dart';
 import 'widgets/centered_slider_track_shape.dart';
 
 void main() {
@@ -94,6 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.black,
                 padding: EdgeInsets.all(8),
                 child: Crop(
+                  autoReCenter: false,
                   interactive: true,
                   controller: controller,
                   shape: shape,

@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:crop/crop.dart';
 import 'package:flutter/material.dart';
+import 'package:simple_image_tools/crop/src/crop.dart';
 import 'package:simple_image_tools/utils/strings.dart';
 
 // all strings
