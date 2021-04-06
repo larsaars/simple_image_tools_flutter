@@ -68,6 +68,30 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(
+              Icons.delete,
+            ),
+            tooltip: s.delete,
+            onPressed: () {
+              // delete this file
+              file.deleteSync();
+              // if input file has been deleted set next if possible
+              // if there are no more images in folder, exit
+              if (file.path == inputFile.path) {
+                if (canSwitchImage(1))
+                  switchImage(1);
+                else if (canSwitchImage(-1))
+                  switchImage(-1);
+                else
+                  exit(0);
+              }
+              // reload files
+              setFiles();
+              // and reset
+              reset();
+            },
+          ),
+          IconButton(
+            icon: Icon(
               Icons.center_focus_strong,
             ),
             tooltip: s.recenter,

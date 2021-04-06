@@ -11,4 +11,6 @@ const String ok = 'ok',
     cropReplace = 'save as replacement',
     recenter = 'recenter',
     nextPicture = 'next image',
-    lastPicture = 'last image', version = '1.0';
+    lastPicture = 'last image',
+    version = '1.0',
+    delete = 'delete';
