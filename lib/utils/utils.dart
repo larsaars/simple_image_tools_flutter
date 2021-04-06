@@ -17,17 +17,22 @@ double ogAspectRatio = 1;
 final controller = CropController();
 
 // determine the input file on start (for different platforms)
-void determineInputFile() async {
+void determineInputFile() {
   String? args;
   if (Platform.isLinux || Platform.isMacOS)
     args = '~/.sitpath';
   else if (Platform.isWindows) args = '%AppData%\\.sitpath';
 
+
   if (args != null) {
     final argsFile = File(args);
 
-    if (argsFile.existsSync())
+    print('searching input file path in ${argsFile.path}');
+
+    if (argsFile.existsSync()) {
       inputFile = File(argsFile.readAsStringSync().trim().replaceAll('\n', ''));
+      print('found ${inputFile.path}');
+    }
   }
 }
 
