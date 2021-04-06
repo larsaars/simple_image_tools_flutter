@@ -7,8 +7,6 @@ import 'package:simple_image_tools/utils/utils.dart';
 import 'widgets/centered_slider_track_shape.dart';
 
 void main() {
-  // determine the folder and all files in there
-  setFiles();
   // run the app
   runApp(MyApp());
 }
@@ -35,22 +33,26 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final controller = CropController();
+
   double _rotation = 0, _scale = 1;
   BoxShape shape = BoxShape.rectangle;
 
   @override
+  void initState() {
+    super.initState();
+    // determine the folder and all files in there
+    setFiles();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(
           file.path,
           maxLines: 1,
@@ -92,12 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   interactive: true,
                   controller: controller,
                   shape: shape,
-                  child:
-                      /*Image.file(
-                    file,
-                    fit: BoxFit.cover,
-                  ),*/
-                      Image.asset('assets/imgs/test_image.jpg'),
+                  child: image,
                   helper: shape == BoxShape.rectangle
                       ? Container(
                           decoration: BoxDecoration(
@@ -167,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       child: Text(s.original),
-                      value: 1000 / 667.0,
+                      value: ogAspectRatio,
                     ),
                     PopupMenuDivider(),
                     PopupMenuItem(
