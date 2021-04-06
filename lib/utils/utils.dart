@@ -5,7 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:simple_image_tools/crop/src/crop.dart';
+import 'package:path_provider/path_provider.dart' as pp;
 
+// if is initialized
+bool initialized = false;
 // the set input file
 var inputFile = File('not_a_file');
 // from the input file read all files in same folder for switching (right left)
@@ -17,22 +20,14 @@ double ogAspectRatio = 1;
 final controller = CropController();
 
 // determine the input file on start (for different platforms)
-void determineInputFile() {
-  String? args;
-  if (Platform.isLinux || Platform.isMacOS)
-    args = '~/.sitpath';
-  else if (Platform.isWindows) args = '%AppData%\\.sitpath';
+Future<void> determineInputFile() async {
+  final argsFile = File((await pp.getApplicationSupportDirectory()).path + Platform.pathSeparator + '.sitpath');
 
+  print('searching input file path in ${argsFile.path}');
 
-  if (args != null) {
-    final argsFile = File(args);
-
-    print('searching input file path in ${argsFile.path}');
-
-    if (argsFile.existsSync()) {
-      inputFile = File(argsFile.readAsStringSync().trim().replaceAll('\n', ''));
-      print('found ${inputFile.path}');
-    }
+  if (argsFile.existsSync()) {
+    inputFile = File(argsFile.readAsStringSync().trim().replaceAll('\n', ''));
+    print('found ${inputFile.path}');
   }
 }
 

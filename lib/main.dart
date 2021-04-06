@@ -48,10 +48,17 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    // call async
+    init().whenComplete(() => setState(() {}));
+  }
+
+  Future<void> init() async {
     // get input file
-    determineInputFile();
+    await determineInputFile();
     // determine the folder and all files in there
     setFiles();
+    // is initialized
+    initialized = true;
   }
 
   @override
@@ -61,6 +68,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if(!initialized)
+      return Container();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -77,7 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
               // delete this file
               file.deleteSync();
               // snackbar that image has been deleted
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(s.deleted + file.path)));
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(s.deleted + file.path)));
               // if input file has been deleted set next if possible
               // if there are no more images in folder, exit
               if (file.path == inputFile.path) {
@@ -325,7 +336,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   inputFile = ffile;
                 setFiles();
                 // snackbar that image has been saved
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(s.saved + newFile.path)));
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(s.saved + newFile.path)));
               }));
     });
   }
