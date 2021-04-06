@@ -12,8 +12,7 @@ var inputFile = File('C:\\Users\\larsl\\Downloads\\IMG-20210404-WA0018.jpg');
 // from the input file read all files in same folder for switching (right left)
 List<File> files = [];
 int filesIdx = 0;
-// the current image
-Image current = Image.asset('assets/imgs/def.jpg');
+// default aspect ratio
 double ogAspectRatio = 1;
 // control the crop
 final controller = CropController();
@@ -61,13 +60,6 @@ void switchImage(int dir) async {
     return;
   // set new index
   filesIdx = dir;
-  // load image and set default if not loadable
-  current = file.existsSync()
-      ? Image.file(
-    file,
-    fit: BoxFit.cover,
-  )
-      : Image.asset('assets/imgs/def.jpg');
   // calc default aspect ratio
   // for that load it again from file (?!)
   var decodedImage = await decodeImageFromList(file.readAsBytesSync());
