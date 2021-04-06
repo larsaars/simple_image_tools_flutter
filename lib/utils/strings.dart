@@ -6,5 +6,8 @@ class Strings {
       cropShape = 'crop shape',
       box = 'box',
       oval = 'oval',
-      original = 'original';
+      original = 'original',
+      about = 'about',
+      cropCopy = 'save as copy',
+      cropReplace = 'save as replacement';
 }

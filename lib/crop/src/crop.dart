@@ -106,9 +106,8 @@ class _CropState extends State<Crop> with TickerProviderStateMixin {
   }
 
   void _reCenterImage() {
-    // dont recenter if not wanted
-    if(!widget.autoReCenter)
-      return;
+    // don't recenter if not wanted
+    if (!widget.autoReCenter) return;
 
     //final totalSize = _parent.currentContext.size;
 
