@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path/path.dart' as path;
 import 'package:simple_image_tools/utils/utils.dart';
 
 import 'crop/src/crop.dart';
@@ -81,12 +83,21 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             tooltip: s.cropReplace,
             onPressed: () => controller.crop().then(
-              (value) {
-                value.toByteData().then((data) {
-                  final buffer = data!.buffer;
-                  return File(file.parent.path + Platform.pathSeparator + 'test.jpg').writeAsBytes(buffer.asUint8List(
-                      data.offsetInBytes, data.lengthInBytes));
-                });
+              (image) async {
+                // delete old file
+                file.deleteSync();
+                // rename file to a png
+                final fileName =
+                    path.basenameWithoutExtension(file.path) + '.png';
+                File newFile =
+                    File(file.parent.path + Platform.pathSeparator + fileName);
+                // write new image
+                var pngBytes =
+                    await image.toByteData(format: ImageByteFormat.png);
+                newFile.writeAsBytes(pngBytes!.buffer.asInt8List()).then((value) => setState(() {
+                  inputFile = newFile;
+                  setFiles();
+                }));
               },
             ),
           ),
