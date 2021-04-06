@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:simple_image_tools/crop/src/crop.dart';
 
 // the set input file
-var inputFile = File('C:\\Users\\larsl\\Downloads\\20210323_211516.jpg');
+var inputFile = File('not_a_file');
 // from the input file read all files in same folder for switching (right left)
 List<File> files = [];
 int filesIdx = 0;
@@ -15,6 +15,21 @@ int filesIdx = 0;
 double ogAspectRatio = 1;
 // control the crop
 final controller = CropController();
+
+// determine the input file on start (for different platforms)
+void determineInputFile() async {
+  String? args;
+  if (Platform.isLinux || Platform.isMacOS)
+    args = '~/.sitpath';
+  else if (Platform.isWindows) args = '%AppData%\\.sitpath';
+
+  if (args != null) {
+    final argsFile = File(args);
+
+    if (argsFile.existsSync())
+      inputFile = File(argsFile.readAsStringSync().trim().replaceAll('\n', ''));
+  }
+}
 
 // determine the folder and all files in there
 void setFiles() {

@@ -48,6 +48,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    // get input file
+    determineInputFile();
     // determine the folder and all files in there
     setFiles();
   }
