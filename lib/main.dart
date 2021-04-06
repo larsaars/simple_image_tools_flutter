@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -5,9 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:simple_image_tools/utils/utils.dart';
 
 import 'crop/src/crop.dart';
-import 'widgets/centered_slider_track_shape.dart';
-
 import 'utils/strings.dart' as s;
+import 'widgets/centered_slider_track_shape.dart';
 
 void main() {
   //ensure binding to native code
@@ -65,13 +65,31 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         actions: <Widget>[
           IconButton(
-              icon: Icon(
-                Icons.center_focus_strong,
-              ),
-              tooltip: s.recenter,
-              onPressed: () => setState(() {
-                    controller.recenter();
-                  })),
+            icon: Icon(
+              Icons.center_focus_strong,
+            ),
+            tooltip: s.recenter,
+            onPressed: () => setState(
+              () {
+                controller.recenter();
+              },
+            ),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.save,
+            ),
+            tooltip: s.cropReplace,
+            onPressed: () => controller.crop().then(
+              (value) {
+                value.toByteData().then((data) {
+                  final buffer = data!.buffer;
+                  return File(file.parent.path + Platform.pathSeparator + 'test.jpg').writeAsBytes(buffer.asUint8List(
+                      data.offsetInBytes, data.lengthInBytes));
+                });
+              },
+            ),
+          ),
           PopupMenuButton<String>(
             onSelected: handleMenuClick,
             itemBuilder: (BuildContext context) {

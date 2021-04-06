@@ -5,10 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:simple_image_tools/crop/src/crop.dart';
-import 'package:simple_image_tools/utils/strings.dart';
 
 // the set input file
-var inputFile = File('C:\\Users\\larsl\\Downloads\\IMG-20210404-WA0018.jpg');
+var inputFile = File('C:\\Users\\larsl\\Downloads\\20210330_182647.jpg');
 // from the input file read all files in same folder for switching (right left)
 List<File> files = [];
 int filesIdx = 0;
@@ -19,6 +18,8 @@ final controller = CropController();
 
 // determine the folder and all files in there
 void setFiles() {
+  // exit app immediately if file does not exist
+  if (!inputFile.existsSync()) exit(0);
   // clear list firstly
   files.clear();
   // add all image files to list
@@ -56,14 +57,14 @@ bool canSwitchImage(int dir) {
 
 Future<void> switchImage(int dir) async {
   // check again if can switch (is async)
-  if(!canSwitchImage(dir))
-    return;
+  if (!canSwitchImage(dir)) return;
   // set new index
   filesIdx += dir;
   // calc default aspect ratio
   // for that load it again from file
   var decodedImage = await decodeImageFromList(file.readAsBytesSync());
-  ogAspectRatio = decodedImage.width.toDouble() / decodedImage.height.toDouble();
+  ogAspectRatio =
+      decodedImage.width.toDouble() / decodedImage.height.toDouble();
 
   // set controllers aspect ratio default to og
   controller.aspectRatio = ogAspectRatio;
@@ -82,7 +83,7 @@ const IMG_EXTENSIONS = const ['jpeg', 'jpg', 'png', 'gif', 'webp'];
 
 void addLicenses() {
   LicenseRegistry.addLicense(() async* {
-    yield LicenseEntryWithLineBreaks(['crop'],
-        await rootBundle.loadString('assets/licenses/CROP'));
+    yield LicenseEntryWithLineBreaks(
+        ['crop'], await rootBundle.loadString('assets/licenses/CROP'));
   });
 }
