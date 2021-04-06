@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:simple_image_tools/crop/src/crop.dart';
 import 'package:simple_image_tools/utils/strings.dart';
 
-// all strings
-final s = Strings();
 // the set input file
 var inputFile = File('C:\\Users\\larsl\\Downloads\\IMG-20210404-WA0018.jpg');
 // from the input file read all files in same folder for switching (right left)
@@ -79,3 +79,10 @@ bool get platformIsDesktop =>
     Platform.isLinux || Platform.isMacOS || Platform.isWindows;
 
 const IMG_EXTENSIONS = const ['jpeg', 'jpg', 'png', 'gif', 'webp'];
+
+void addLicenses() {
+  LicenseRegistry.addLicense(() async* {
+    yield LicenseEntryWithLineBreaks(['crop'],
+        await rootBundle.loadString('assets/licenses/CROP'));
+  });
+}

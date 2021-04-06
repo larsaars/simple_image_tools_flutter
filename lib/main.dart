@@ -1,14 +1,21 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:simple_image_tools/utils/utils.dart';
 
 import 'crop/src/crop.dart';
 import 'widgets/centered_slider_track_shape.dart';
 
+import 'utils/strings.dart' as s;
+
 void main() {
-  // run the app
+  //ensure binding to native code
+  WidgetsFlutterBinding.ensureInitialized();
+  //run the app
   runApp(MyApp());
+  //add all licenses
+  addLicenses();
 }
 
 class MyApp extends StatelessWidget {
@@ -257,10 +264,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void handleMenuClick(String value) {
     switch (value) {
-      case 'Logout':
+      case s.about:
+        _onAbout();
         break;
-      case 'Settings':
+      case s.cropCopy:
         break;
     }
+  }
+
+  void _onAbout() async {
+    //show the about dialog
+    showAboutDialog(
+      context: context,
+      applicationVersion: s.version,
+      applicationIcon: Image.asset(
+        'assets/imgs/icon.png',
+        width: 50,
+        height: 50,
+      ),
+      applicationLegalese: await rootBundle.loadString('assets/licenses/THIS'),
+    );
   }
 }
