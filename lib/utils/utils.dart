@@ -54,19 +54,23 @@ bool canSwitchImage(int dir) {
   return newIdx >= 0 && newIdx < files.length;
 }
 
-void switchImage(int dir) async {
+Future<void> switchImage(int dir) async {
   // check again if can switch (is async)
   if(!canSwitchImage(dir))
     return;
   // set new index
-  filesIdx = dir;
+  filesIdx += dir;
   // calc default aspect ratio
-  // for that load it again from file (?!)
+  // for that load it again from file
   var decodedImage = await decodeImageFromList(file.readAsBytesSync());
   ogAspectRatio = decodedImage.width.toDouble() / decodedImage.height.toDouble();
 
   // set controllers aspect ratio default to og
   controller.aspectRatio = ogAspectRatio;
+  // reset also other values of controller
+  controller.scale = 1;
+  controller.offset = Offset.zero;
+  controller.rotation = 0;
 }
 
 File get file => files[filesIdx];

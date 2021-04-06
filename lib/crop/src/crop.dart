@@ -21,7 +21,7 @@ class Crop extends StatefulWidget {
   final bool interactive;
   final BoxShape shape;
   final ValueChanged<MatrixDecomposition>? onChanged;
-  final bool autoReCenter;
+  final bool autoRecenter;
 
   Crop({
     Key? key,
@@ -37,7 +37,7 @@ class Crop extends StatefulWidget {
     this.interactive: true,
     this.shape: BoxShape.rectangle,
     this.onChanged,
-    this.autoReCenter: false,
+    this.autoRecenter: false,
   }) : super(key: key);
 
   @override
@@ -106,15 +106,18 @@ class _CropState extends State<Crop> with TickerProviderStateMixin {
   }
 
   void _reCenterImage() {
-    // don't recenter if not wanted
-    if (!widget.autoReCenter) return;
+    if(!widget.autoRecenter && !widget.controller._recenter)
+      return;
+    else if(widget.controller._recenter)
+      widget.controller._recenter = false;
 
     //final totalSize = _parent.currentContext.size;
 
     final sz = _key.currentContext!.size!;
     final s = widget.controller._scale * widget.controller._getMinScale();
-    final w = sz.width;
     final h = sz.height;
+    final w = sz.width;
+
     final canvas = Rect.fromLTWH(0, 0, w, h);
     final image = getRotated(
         canvas, widget.controller._rotation, s, widget.controller._offset);
@@ -342,7 +345,13 @@ class CropController extends ChangeNotifier {
   double _rotation = 0;
   double _scale = 1;
   Offset _offset = Offset.zero;
+  bool _recenter = false;
   _CropCallback? _cropCallback;
+
+  void recenter() {
+    _recenter = true;
+    notifyListeners();
+  }
 
   double get aspectRatio => _aspectRatio;
 

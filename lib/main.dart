@@ -70,152 +70,178 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            // show only on desktop
-            platformIsDesktop
-                ? Row(
-                    children: [
-                      Expanded(
-                        child: SliderTheme(
-                          data: Theme.of(context).sliderTheme,
-                          child: Slider(
-                            divisions: 100,
-                            value: math.min(_scale, 11),
-                            min: 1,
-                            max: 11,
-                            label: _scale.toStringAsFixed(1),
-                            onChanged: (n) {
-                              setState(() {
-                                _scale = n.toDouble();
-                                controller.scale = _scale;
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                : Container(),
-            Expanded(
-              child: Container(
-                color: Colors.black,
-                padding: EdgeInsets.all(8),
-                child: Crop(
-                  autoReCenter: false,
-                  interactive: true,
-                  controller: controller,
-                  shape: shape,
-                  child: file.existsSync()
-                      ? Image.file(
-                          file,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.asset('assets/imgs/def.jpg'),
-                  helper: shape == BoxShape.rectangle
-                      ? Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white, width: 2),
-                          ),
-                        )
-                      : null,
+      body: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Center(
+            child: IconButton(
+                icon: Icon(
+                  Icons.chevron_left,
                 ),
-              ),
-            ),
-            Row(
+                onPressed: () =>
+                    switchImage(-1).then((value) => setState(() {
+                      controller.recenter();
+                    }))),
+          ),
+          Expanded(
+            child: Column(
               children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.undo),
-                  tooltip: s.undo,
-                  onPressed: () {
-                    controller.rotation = 0;
-                    controller.scale = 1;
-                    controller.offset = Offset.zero;
-                    setState(() {
-                      _scale = 1;
-                      _rotation = 0;
-                    });
-                  },
-                ),
+                // show only on desktop
+                platformIsDesktop
+                    ? Row(
+                        children: [
+                          Expanded(
+                            child: SliderTheme(
+                              data: Theme.of(context).sliderTheme,
+                              child: Slider(
+                                divisions: 100,
+                                value: math.min(_scale, 11),
+                                min: 1,
+                                max: 11,
+                                label: _scale.toStringAsFixed(1),
+                                onChanged: (n) {
+                                  setState(() {
+                                    _scale = n.toDouble();
+                                    controller.scale = _scale;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(),
                 Expanded(
-                  child: SliderTheme(
-                    data: Theme.of(context).sliderTheme.copyWith(
-                          trackShape: CenteredRectangularSliderTrackShape(),
-                        ),
-                    child: Slider(
-                      divisions: 360,
-                      value: _rotation,
-                      min: -180,
-                      max: 180,
-                      label: '$_rotation°',
-                      onChanged: (n) {
-                        setState(() {
-                          _rotation = n.roundToDouble();
-                          controller.rotation = _rotation;
-                        });
-                      },
+                  child: Container(
+                    color: Colors.black,
+                    padding: EdgeInsets.all(8),
+                    child: Crop(
+                      autoRecenter: false,
+                      interactive: true,
+                      controller: controller,
+                      shape: shape,
+                      child: file.existsSync()
+                          ? Image.file(
+                              file,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset('assets/imgs/def.jpg'),
+                      helper: shape == BoxShape.rectangle
+                          ? Container(
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.white, width: 2),
+                              ),
+                            )
+                          : null,
                     ),
                   ),
                 ),
-                PopupMenuButton<BoxShape>(
-                  icon: Icon(Icons.crop_free),
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      child: Text(s.box),
-                      value: BoxShape.rectangle,
+                Row(
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.undo),
+                      tooltip: s.undo,
+                      onPressed: () {
+                        controller.rotation = 0;
+                        controller.scale = 1;
+                        controller.offset = Offset.zero;
+                        setState(() {
+                          _scale = 1;
+                          _rotation = 0;
+                        });
+                      },
                     ),
-                    PopupMenuItem(
-                      child: Text(s.oval),
-                      value: BoxShape.circle,
+                    Expanded(
+                      child: SliderTheme(
+                        data: Theme.of(context).sliderTheme.copyWith(
+                              trackShape: CenteredRectangularSliderTrackShape(),
+                            ),
+                        child: Slider(
+                          divisions: 360,
+                          value: _rotation,
+                          min: -180,
+                          max: 180,
+                          label: '$_rotation°',
+                          onChanged: (n) {
+                            setState(() {
+                              _rotation = n.roundToDouble();
+                              controller.rotation = _rotation;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    PopupMenuButton<BoxShape>(
+                      icon: Icon(Icons.crop_free),
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          child: Text(s.box),
+                          value: BoxShape.rectangle,
+                        ),
+                        PopupMenuItem(
+                          child: Text(s.oval),
+                          value: BoxShape.circle,
+                        ),
+                      ],
+                      tooltip: s.cropShape,
+                      onSelected: (x) {
+                        setState(() {
+                          shape = x;
+                        });
+                      },
+                    ),
+                    PopupMenuButton<double>(
+                      icon: Icon(Icons.aspect_ratio),
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          child: Text(s.original),
+                          value: ogAspectRatio,
+                        ),
+                        PopupMenuDivider(),
+                        PopupMenuItem(
+                          child: Text("16:9"),
+                          value: 16.0 / 9.0,
+                        ),
+                        PopupMenuItem(
+                          child: Text("4:3"),
+                          value: 4.0 / 3.0,
+                        ),
+                        PopupMenuItem(
+                          child: Text("1:1"),
+                          value: 1,
+                        ),
+                        PopupMenuItem(
+                          child: Text("3:4"),
+                          value: 3.0 / 4.0,
+                        ),
+                        PopupMenuItem(
+                          child: Text("9:16"),
+                          value: 9.0 / 16.0,
+                        ),
+                      ],
+                      tooltip: s.aspectRatio,
+                      onSelected: (x) {
+                        controller.aspectRatio = x;
+                        setState(() {});
+                      },
                     ),
                   ],
-                  tooltip: s.cropShape,
-                  onSelected: (x) {
-                    setState(() {
-                      shape = x;
-                    });
-                  },
-                ),
-                PopupMenuButton<double>(
-                  icon: Icon(Icons.aspect_ratio),
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      child: Text(s.original),
-                      value: ogAspectRatio,
-                    ),
-                    PopupMenuDivider(),
-                    PopupMenuItem(
-                      child: Text("16:9"),
-                      value: 16.0 / 9.0,
-                    ),
-                    PopupMenuItem(
-                      child: Text("4:3"),
-                      value: 4.0 / 3.0,
-                    ),
-                    PopupMenuItem(
-                      child: Text("1:1"),
-                      value: 1,
-                    ),
-                    PopupMenuItem(
-                      child: Text("3:4"),
-                      value: 3.0 / 4.0,
-                    ),
-                    PopupMenuItem(
-                      child: Text("9:16"),
-                      value: 9.0 / 16.0,
-                    ),
-                  ],
-                  tooltip: s.aspectRatio,
-                  onSelected: (x) {
-                    controller.aspectRatio = x;
-                    setState(() {});
-                  },
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          Center(
+            child: IconButton(
+                icon: Icon(
+                  Icons.chevron_right,
+                ),
+                onPressed: () =>
+                    switchImage(1).then((value) => setState(() {
+                      controller.recenter();
+                    }))),
+          ),
+        ],
       ),
     );
   }
