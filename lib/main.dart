@@ -1,18 +1,17 @@
-import 'dart:io';
-import 'dart:math';
+import 'dart:math' as math;
 
+import 'package:crop/crop.dart';
 import 'package:flutter/material.dart';
-import 'package:simple_image_tools/strings.dart';
+import 'package:simple_image_tools/utils/utils.dart';
 
-import 'crop/crop.dart';
 import 'widgets/centered_slider_track_shape.dart';
 
 void main() {
+  // determine the folder and all files in there
+  setFiles();
+  // run the app
   runApp(MyApp());
 }
-
-Strings s = Strings();
-File file = File('D:/FlutterProjects/simple_image_tools/test_image.jpg');
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -58,42 +57,39 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
           children: <Widget>[
-            Row(
-              children: [
-                Expanded(
-                  child: SliderTheme(
-                    data: Theme.of(context).sliderTheme,
-                    child: Slider(
-                      divisions: 100,
-                      value: min(_scale, 11),
-                      min: 1,
-                      max: 11,
-                      label: '$_scale',
-                      onChanged: (n) {
-                        setState(() {
-                          _scale = n.toDouble();
-                          controller.scale = _rotation;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            // show only on desktop
+            platformIsDesktop
+                ? Row(
+                    children: [
+                      Expanded(
+                        child: SliderTheme(
+                          data: Theme.of(context).sliderTheme,
+                          child: Slider(
+                            divisions: 100,
+                            value: math.min(_scale, 11),
+                            min: 1,
+                            max: 11,
+                            label: _scale.toStringAsFixed(1),
+                            onChanged: (n) {
+                              setState(() {
+                                _scale = n.toDouble();
+                                controller.scale = _scale;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Container(),
             Expanded(
               child: Container(
                 color: Colors.black,
                 padding: EdgeInsets.all(8),
                 child: Crop(
                   interactive: true,
-                  onChanged: (decomposition) {
-                    print(
-                        "Scale : ${decomposition.scale}, Rotation: ${decomposition.rotation}, translation: ${decomposition.translation}");
-                  },
                   controller: controller,
                   shape: shape,
                   child:

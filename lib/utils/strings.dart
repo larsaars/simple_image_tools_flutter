@@ -1,5 +1,5 @@
 class Strings {
-  String ok = 'ok',
+  final ok = 'ok',
       appName = 'Image Tools',
       aspectRatio = 'aspect ratio',
       undo = 'undo',
