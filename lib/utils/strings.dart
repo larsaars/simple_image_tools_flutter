@@ -13,4 +13,5 @@ const String ok = 'ok',
     nextPicture = 'next image',
     lastPicture = 'last image',
     version = '1.0',
-    delete = 'delete';
+    delete = 'delete',
+    deleted = 'deleted ', saved = 'saved ';

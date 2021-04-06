@@ -74,6 +74,8 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () {
               // delete this file
               file.deleteSync();
+              // snackbar that image has been deleted
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(s.deleted + file.path)));
               // if input file has been deleted set next if possible
               // if there are no more images in folder, exit
               if (file.path == inputFile.path) {
@@ -320,6 +322,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 else
                   inputFile = ffile;
                 setFiles();
+                // snackbar that image has been saved
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(s.saved + newFile.path)));
               }));
     });
   }
