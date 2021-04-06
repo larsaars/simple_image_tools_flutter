@@ -57,6 +57,14 @@ class _MyHomePageState extends State<MyHomePage> {
           maxLines: 1,
         ),
         actions: <Widget>[
+          IconButton(
+              icon: Icon(
+                Icons.center_focus_strong,
+              ),
+              tooltip: s.recenter,
+              onPressed: () => setState(() {
+                    controller.recenter();
+                  })),
           PopupMenuButton<String>(
             onSelected: handleMenuClick,
             itemBuilder: (BuildContext context) {
@@ -78,8 +86,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 icon: Icon(
                   Icons.chevron_left,
                 ),
-                onPressed: () =>
-                    switchImage(-1).then((value) => setState(() {
+                tooltip: s.lastPicture,
+                onPressed: () => switchImage(-1).then((value) => setState(() {
                       controller.recenter();
                     }))),
           ),
@@ -147,6 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         controller.scale = 1;
                         controller.offset = Offset.zero;
                         setState(() {
+                          controller.recenter();
                           _scale = 1;
                           _rotation = 0;
                         });
@@ -236,8 +245,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 icon: Icon(
                   Icons.chevron_right,
                 ),
-                onPressed: () =>
-                    switchImage(1).then((value) => setState(() {
+                tooltip: s.nextPicture,
+                onPressed: () => switchImage(1).then((value) => setState(() {
                       controller.recenter();
                     }))),
           ),

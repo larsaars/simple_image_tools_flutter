@@ -9,5 +9,5 @@ class Strings {
       original = 'original',
       about = 'about',
       cropCopy = 'save as copy',
-      cropReplace = 'save as replacement';
+      cropReplace = 'save as replacement', recenter = 'recenter', nextPicture = 'next image', lastPicture = 'last image';
 }
